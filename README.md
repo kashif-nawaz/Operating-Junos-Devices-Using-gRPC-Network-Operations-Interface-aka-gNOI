@@ -2,11 +2,12 @@
 * In this wiki I will explain how to operate Junos devices with gRPC Network Operations Interface (gNOI).
 * To get more information about gRPC Network Operations Interface (gNOI), please explore the [document](https://grpc.io/).
 ## Execution
-* TLS based mutual authentication using is required between gRPC Server (Junos Device) and gRPC client (Ubuntu 20.04 in my case).
-* Junos Device (gRPC server) needs to have its certificate and private key along with CA certificate.
+* TLS based mutual authentication  is required between gRPC Server (Junos Device) and client (Ubuntu 20.04 in my case).
+* gRPC server (Junos Device) needs to have its  own certificate and private key along with CA certificate.
 * gRPC Client needs to have its own certificate and private key along with CA certificate.
-* To meet above requirments, I will use self-signed certificate.
-## Prepare  Self-Signed CA Cert
+* To meet above requirments, I will use self-signed certificates.
+### Prepare  Self-Signed Certificates
+* CA Cert
 ```
 mkdir ~/PKI
 cd ~/PKI
@@ -16,14 +17,14 @@ openssl req -in ca.csr -noout ca.csr
 openssl req -in ca.csr -noout -text
 openssl req -x509 -sha256 -days 365 -key ca.key -in ca.csr -out ca.pem
 ```
-## Prepare gRPC client Cert
+* gRPC client Cert
 ```
 openssl genrsa -out mgmt-client.key 4096
 openssl req -new -sha256 -key mgmt-client.key -subj "/CN=mgmt-client" -out mgmt-client.csr
 openssl req -in mgmt-client.csr --noout text
 openssl x509 -req -in mgmt-client.csr -CAcreateserial -CAserial ca.seq -sha256 -days 365 -CA ca.pem -CAkey ca.key -out mgmt-client.crt
 ```
-## Prepare gRPC Server Cert
+* gRPC Server Cert
 * Hence gRPC client will connect with the gRPC server (Junos Device) using IP-Address so certificate needs to be signed using Subject-Alternate-Name (SAN) as Common Name (CN) can't have IP-Address entry. 
 ```
 openssl genrsa -out A1-R2.key 4096 
@@ -37,18 +38,19 @@ openssl req -new -sha256 \
 
 openssl x509 -req -extfile <(printf "subjectAltName=IP:192.168.10.10") -days 365 -in  A1-R2.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out  A1-R2.crt 
 ```
-## Copy gRPC Server Cert, Key and CA Cert into Junos Device.
+## Prepare gRPC Server (Junos Device) for gRPC Connections
+* Copy gRPC Server Cert, Key and CA Cert into Junos Device.
 ```
 scp A1-R2.crt user@192.168.10.10:/var/tmp
 scp A1-R2.key user@192.168.10.10:/var/tmp
 scp ca.pem user@192.168.10.10:/var/tmp
 ```
-## Load the Certificate into Junos Device 
+* Load the Certificate into Junos Device 
 ```
 request security pki local-certificate load certificate-id gnoi-server filename /var/tmp/A1-R2.crt key /var/tmp/A1-R2.key
 show security pki local-certificate certificate-id gnoi-server
 ```
-## Configure Junos Device for gRPC Sessions
+* Configure Junos Device for gRPC Sessions
 ```
 edit
 set system services extension-service request-response grpc ssl port 50051
@@ -93,7 +95,7 @@ common_pb2_grpc.py  diag.proto        os_pb2.py       types_pb2_grpc.py
 common_pb2.py       file_pb2_grpc.py  os.proto        types_pb2.py
 ```
 
-## Test the Connectivity between gRPC client and Server 
+### Test the Connectivity between gRPC client and Server 
 * For this step we need two python scripts [grpc_channel.py and gnoi_connect_cert_auth_mutual.py](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/topic-map/gnoi-services-configuring.html)
 * Above named scripts are also uploaded with this wiki.
 ```
@@ -103,12 +105,10 @@ Creating channel
 Executing GNOI::System::Time RPC
 Response received: time since last epoch in nanoseconds is  time: 167242598263437500
 ```
-## gNOI Services
-* [Reference](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/topic-map/gnoi-system-service.html)
-* I have used System services (Software Upgrade) and Reboot from above referenced document.
-### System Service (Software Upgrade)
+### gNOI Supported Services in Junos
+* [Reference](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/topic-map/gnoi-services-overview.html)
+* I have used System services [Software Upgrade](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/topic-map/gnoi-system-service.html#id-upgrade-software) for testing. 
 * Prepare args_system_set_package.txt
-
 ```
 cd ~/src/gnoi/proto
 cat > args_system_set_package.txt << EOF
@@ -125,8 +125,7 @@ cat > args_system_set_package.txt << EOF
 --timeout=1800
 EOF
 ```
-* Execute Software Upgrade
-
+* Junos  Upgrade via gNOI System Service Upgrade Software
 ```
 user@mgmt-client:~/src/gnoi/proto$ python3 gnoi_system_set_package.py @args_system_set_package.txt 
 gRPC server password for executing RPCs: 
@@ -135,4 +134,4 @@ Executing GNOI::System::SetPackage
 SetPackage start.
 SetPackage complete.
 ```
-* After Junos  installation, device will reboot automatically 
+* After Junos  installation, device will reboot automatically. 
