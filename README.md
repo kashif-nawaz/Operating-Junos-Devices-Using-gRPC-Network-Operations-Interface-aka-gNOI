@@ -95,7 +95,7 @@ common_pb2_grpc.py  diag.proto        os_pb2.py       types_pb2_grpc.py
 common_pb2.py       file_pb2_grpc.py  os.proto        types_pb2.py
 ```
 
-### Test the Connectivity between gRPC client and Server 
+### Test Connectivity between gRPC client and Server 
 * For this step we need two python scripts [grpc_channel.py and gnoi_connect_cert_auth_mutual.py](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/topic-map/gnoi-services-configuring.html)
 * Above named scripts are also uploaded with this wiki.
 ```
@@ -107,7 +107,7 @@ Response received: time since last epoch in nanoseconds is  time: 16724259826343
 ```
 ### gNOI Supported Services in Junos
 * [Reference](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/topic-map/gnoi-services-overview.html)
-* I have used System services [Software Upgrade](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/topic-map/gnoi-system-service.html#id-upgrade-software) for testing. 
+* I have used System Service [Software Upgrade](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/topic-map/gnoi-system-service.html#id-upgrade-software) for testing. 
 * Prepare args_system_set_package.txt
 ```
 cd ~/src/gnoi/proto
