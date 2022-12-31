@@ -99,7 +99,7 @@ common_pb2.py       file_pb2_grpc.py  os.proto        types_pb2.py
 * For this step we need two python scripts [grpc_channel.py and gnoi_connect_cert_auth_mutual.py](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/topic-map/gnoi-services-configuring.html)
 * Above named scripts are also uploaded with this wiki.
 ```
-python3 gnoi_connect_cert_auth_mutual.py --server 192.168.10.10 --port 50051 --root_ca_cert PKI/ca.pem --client_key PKI/mgmt-client.key --client_cert  PKI/mgmt-client.crt --user_id user
+user@mgmt-client:~/src/gnoi/proto$ python3 gnoi_connect_cert_auth_mutual.py --server 192.168.10.10 --port 50051 --root_ca_cert PKI/ca.pem --client_key PKI/mgmt-client.key --client_cert  PKI/mgmt-client.crt --user_id user
 gRPC server password for executing RPCs:
 Creating channel
 Executing GNOI::System::Time RPC
