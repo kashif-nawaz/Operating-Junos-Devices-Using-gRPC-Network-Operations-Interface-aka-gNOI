@@ -156,6 +156,7 @@ List of installed version(s) :
 * Reboot the Junos EVO BOX to activate new OS
 
 ```
+cd ~/src/gnoi/proto$
 cat > reboot_status_request_args.txt << EOF
 
 --root_ca_cert=~/PKI/ca.pem
@@ -167,7 +168,7 @@ cat > reboot_status_request_args.txt << EOF
 --delay=60
 EOF
 
-python3 gnoi_reboot_status_request.py @reboot_status_request_args.txt
+user@mgmt-client:~/src/gnoi/proto$ python3 gnoi_reboot_status_request.py @reboot_status_request_args.txt
 gRPC server password for executing RPCs:
 Creating channel
 Executing GNOI::System::Reboot RPC
