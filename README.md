@@ -153,7 +153,7 @@ List of installed version(s) :
  -   junos-evo-install-ptx-fixed-x86-64-22.3R1.9-EVO - [2022-12-27 00:35:10]
      junos-evo-install-ptx-fixed-x86-64-22.4R1.11-EVO - [2022-12-30 18:20:40]
 ``` 
-* Reboot the Junos EVO BOX to activate new OS
+* Reboot the Junos EVO Box to activate new OS
 
 ```
 cd ~/src/gnoi/proto$
