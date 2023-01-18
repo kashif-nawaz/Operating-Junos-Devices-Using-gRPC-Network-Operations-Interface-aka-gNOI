@@ -185,3 +185,23 @@ System going down IMMEDIATELY
 
 "Testing gNOI reboot"
 ```
+* After reboot verify running OS in Junos EVO Box
+
+```
+show system software list
+-------------------------------
+node: re0
+-------------------------------
+Active boot device is primary: /dev/sda
+List of installed version(s) :
+
+    '-' running version
+    '>' next boot version after upgrade/downgrade
+    '<' rollback boot version
+    '*' deleted JSU version
+
+ -   junos-evo-install-ptx-fixed-x86-64-22.3R1-S1.4-EVO - [2023-01-18 14:15:56]
+ <   junos-evo-install-ptx-fixed-x86-64-22.3R1.9-EVO - [2022-12-27 00:35:10]
+     junos-evo-install-ptx-fixed-x86-64-22.4R1.11-EVO - [2022-12-30 18:20:40]
+
+```
