@@ -119,9 +119,9 @@ cat > args_system_set_package.txt << EOF
 --server=192.168.10.10
 --port=50051
 --user_id=user
---activate=1
---filename=/var/tmp/junos-evo-install-ptx-fixed-x86-64-22.3R1.9-EVO.iso
---source_package=junos-evo-install-ptx-fixed-x86-64-22.3R1.9-EVO.iso
+--activate=0
+--filename=/var/tmp/junos-evo-install-ptx-fixed-x86-64-22.3R1-S1.4-EVO.iso
+--source_package=junos-evo-install-ptx-fixed-x86-64-22.3R1-S1.4-EVO.iso
 --timeout=1800
 EOF
 ```
@@ -134,4 +134,53 @@ Executing GNOI::System::SetPackage
 SetPackage start.
 SetPackage complete.
 ```
-* After Junos  installation, device will reboot automatically. 
+* Login to Junos EVO and check if new OS pakcage is installed
+
+```
+ show system software list
+-------------------------------
+node: re0
+-------------------------------
+Active boot device is primary: /dev/sda
+List of installed version(s) :
+
+    '-' running version
+    '>' next boot version after upgrade/downgrade
+    '<' rollback boot version
+    '*' deleted JSU version
+
+ >   junos-evo-install-ptx-fixed-x86-64-22.3R1-S1.4-EVO - [2023-01-18 14:15:56]
+ -   junos-evo-install-ptx-fixed-x86-64-22.3R1.9-EVO - [2022-12-27 00:35:10]
+     junos-evo-install-ptx-fixed-x86-64-22.4R1.11-EVO - [2022-12-30 18:20:40]
+``` 
+* Reboot the Junos EVO BOX to activate new OS
+
+```
+cat > reboot_status_request_args.txt << EOF
+
+--root_ca_cert=~/PKI/ca.pem
+--client_key=~/PKI/mgmt-client.key
+--client_cert=~/PKI/mgmt-client.crt
+--server=192.168.10.10
+--user_id=user
+--message="Testing gNOI reboot"
+--delay=60
+EOF
+
+python3 gnoi_reboot_status_request.py @reboot_status_request_args.txt
+gRPC server password for executing RPCs:
+Creating channel
+Executing GNOI::System::Reboot RPC
+Executing GNOI::System::Reboot Status RPC
+Reboot status response received. active: true
+wait: 59596694300
+when: 1674080351000000000
+reason: "\"Testing gNOI reboot\
+```
+* Junos EVO Box should show following message
+
+```
+System going down IMMEDIATELY
+
+"Testing gNOI reboot"
+```
