@@ -1,5 +1,7 @@
 # Operating-Junos-Devices-Using-gRPC-Network-Operations-Interface-gNOI
 * In this wiki I will explain how to operate Junos devices with gRPC Network Operations Interface (gNOI).
+## References
+* Junos support gRPC working groups (gNOI, gNMI specifications) [Reference](https://www.juniper.net/documentation/us/en/software/junos/grpc-network-services/topics/concept/grpc-services-overview.html#:~:text=Whereas%20gNMI%20handles%20state%20management,common%20operations%20on%20network%20devices.)
 * To get more information about gRPC Network Operations Interface (gNOI), please explore the [document](https://grpc.io/).
 ## Execution
 * TLS based mutual authentication  is required between gRPC Server (Junos Device) and client (Ubuntu 20.04 in my case).
